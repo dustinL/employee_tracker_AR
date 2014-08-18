@@ -7,6 +7,6 @@ describe Employee do
     expect(employee.division).to eq division
   end
 
-  it { should have_many :projects }
+  it { should have_and_belong_to_many :projects }
 
 end
