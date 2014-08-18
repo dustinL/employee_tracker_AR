@@ -92,9 +92,32 @@ def add_division
 end
 
 def list_divisions
-  puts "Here are all your divisions:"
+  puts "\n\nHere are all your divisions:"
   divisions = Division.all
-  divisions.each { |division| puts division.name }
+  divisions.each { |division| puts "#{division.id}. #{division.name}" }
+  puts "\nWould you like to view employees by division?"
+  puts "[y] or [n]\n"
+  user_choice = gets.chomp
+
+  if user_choice == 'y'
+    list_employees_by_division
+  elsif user_choice == 'n'
+    divisions_menu
+  else
+    puts "Sorry, that wasn't a valid option.\n"
+      list_divisions
+  end
+end
+
+def list_employees_by_division
+  puts "Enter the index number for the division you would like to view:\n"
+  user_choice = gets.chomp
+  selected_division = Division.find(user_choice)
+  employees_list = selected_division.employees
+  employees_list.each do |employee|
+    puts "*** Employees in #{selected_division.name} ***\n\n"
+    puts "#{employee.id}. #{employee.name}"
+  end
 end
 
 welcome
