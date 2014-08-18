@@ -165,15 +165,20 @@ end
 def add_project
   puts "Type in the new project name:"
   project_name = gets.chomp
-  project = Project.new({:name => project_name})
+  puts "\n\nPlease assign your project to an employee by entering in the index number:"
+  employees = Employee.all
+  employees.each { |employee| puts "#{employee.id}. #{employee.name}" }
+  puts "\n\n"
+  project_assignment = gets.chomp.to_i
+  project = Project.new({:name => project_name, :employee_id => project_assignment})
   project.save
-  puts "'#{project.name}' has been added to your project list."
+  puts "'#{project.name}' has been added."
 end
 
 def list_projects
   puts "Here are all your projects:"
   projects = Project.all
-  projects.each { |project| puts project.name }
+  projects.each { |project| puts "#{project.id}. #{project.name}" }
 end
 
 def list_projects_by_employee
@@ -186,4 +191,5 @@ def list_projects_by_employee
     puts "#{project.id}. #{project.name}"
   end
 end
+
 welcome
