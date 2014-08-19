@@ -139,7 +139,7 @@ def list_employees
     employee_menu
   else
     puts "Sorry, that wasn't a valid option.\n"
-      list_employees
+    list_employees
   end
 end
 
@@ -170,8 +170,10 @@ def add_project
   employees.each { |employee| puts "#{employee.id}. #{employee.name}" }
   puts "\n\n"
   project_assignment = gets.chomp.to_i
-  project = Project.new({:name => project_name, :employee_id => project_assignment})
+  selected_employee = Employee.find(project_assignment)
+  project = Project.new({:name => project_name})
   project.save
+  selected_employee.projects << project
   puts "'#{project.name}' has been added."
 end
 
@@ -179,6 +181,22 @@ def list_projects
   puts "Here are all your projects:"
   projects = Project.all
   projects.each { |project| puts "#{project.id}. #{project.name}" }
+  puts "\nWould you like to view employees by project or add an employee to a project?"
+  puts "Press '1' to view employees by project."
+  puts "Press '2' to add an employee to a project."
+  puts "Press 'x' to return to the project menu.\n"
+  user_choice = gets.chomp
+
+  if user_choice == '1'
+    list_employees_by_project
+  elsif user_choice == '2'
+    add_employee_to_project
+  elsif user_choice == 'x'
+    project_menu
+  else
+    puts "Sorry, that wasn't a valid option.\n"
+      list_projects
+  end
 end
 
 def list_projects_by_employee
@@ -190,6 +208,32 @@ def list_projects_by_employee
     puts "*** Projects for #{selected_employee.name} ***\n"
     puts "#{project.id}. #{project.name}"
   end
+end
+
+def list_employees_by_project
+  puts "Enter the index number for the project you would like to view:\n"
+  user_choice = gets.chomp
+  selected_project = Project.find(user_choice)
+  employees_list = selected_project.employees
+  employees_list.each do |employee|
+    puts "*** Employees for #{selected_project.name} ***\n"
+    puts "#{employee.id}. #{employee.name}"
+  end
+end
+
+def add_employee_to_project
+  puts "Enter the index number of the project for which you want to add an employee:"
+  project_id = gets.chomp
+  selected_project = Project.find(project_id)
+  puts "\n"
+  employees = Employee.all
+  employees.each { |division| puts "#{division.id}. #{division.name}" }
+  puts "\nPlease select an employee by index number to add them to the project:"
+  user_choice = gets.chomp
+  selected_employee = Employee.find(user_choice)
+  selected_project.employees << selected_employee
+  puts "\nEmployee #{selected_employee.name} has been added to #{selected_project.name}\n"
+  project_menu
 end
 
 welcome
