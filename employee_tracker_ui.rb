@@ -215,10 +215,29 @@ def list_projects_by_employee
   puts "Enter the index number for the employee you would like to view:\n"
   user_choice = gets.chomp
   selected_employee = Employee.find(user_choice)
-  projects_list = selected_employee.projects
-  projects_list.each do |project|
+  puts "Would you like to view all projects or those within a specific date range?"
+  puts "Press 'a' for all or 'd' for date range:"
+  user_choice = gets.chomp
+
+  if user_choice == 'a'
+    projects_list = selected_employee.projects
     puts "*** Projects for #{selected_employee.name} ***\n"
-    puts "#{project.id}. #{project.name}"
+    projects_list.each do |project|
+      puts "#{project.id}. #{project.name}"
+    end
+  elsif user_choice == 'd'
+    puts "\nEnter the start date: (YYYY-MM-DD)\n"
+    start_date = gets.chomp
+    puts "Enter the end date:"
+    end_date = gets.chomp
+    project_list = selected_employee.projects.where(:start_date => start_date..end_date)
+    puts "Project ID | Project Name | Start Date | End Date"
+    project_list.each { |project| puts "#{project.id}    #{project.name}    #{project.start_date}    #{project.end_date}" }
+    puts "\n"
+    employee_menu
+  else
+    puts "Sorry, that wasn't a valid option.\n"
+    list_projects_by_employee
   end
 end
 
