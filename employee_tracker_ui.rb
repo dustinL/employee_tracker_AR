@@ -175,7 +175,11 @@ def add_project
   puts "\n\n"
   project_assignment = gets.chomp.to_i
   selected_employee = Employee.find(project_assignment)
-  project = Project.new({:name => project_name})
+  puts "Please assign a start date (YYYY-MM-DD):"
+  start_date = gets.chomp
+  puts "Please assign an end date (YYYY-MM-DD):"
+  end_date = gets.chomp
+  project = Project.new({:name => project_name, :start_date => start_date, :end_date => end_date})
   project.save
   puts "Please enter the contribution for this employee:\n"
   user_contribution = gets.chomp
@@ -187,7 +191,8 @@ end
 def list_projects
   puts "Here are all your projects:"
   projects = Project.all
-  projects.each { |project| puts "#{project.id}. #{project.name}" }
+  puts "Project ID | Project Name | Start Date | End Date"
+  projects.each { |project| puts "#{project.id} #{project.name} #{project.start_date} #{project.end_date}" }
   puts "\nWould you like to view employees by project or add an employee to a project?"
   puts "Press '1' to view employees by project."
   puts "Press '2' to add an employee to a project."
