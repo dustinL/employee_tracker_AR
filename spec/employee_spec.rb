@@ -15,8 +15,11 @@ describe Employee do
     employee = Employee.create({:name => "Michael Scott", :division_id => division.id})
     project = Project.create({:name => "Sell Paper"})
     project1 = Project.create({:name => "Manage"})
+    # contribution = Contribution.create({:contribution => "Sold paper"})
+    # contribution1 = Contribution.create({:contribution => "Managed"})
     employee.projects << project
     employee.projects << project1
+    # binding.pry
     expect(employee.projects).to eq [project, project1]
     expect(project.employees).to eq [employee]
   end
