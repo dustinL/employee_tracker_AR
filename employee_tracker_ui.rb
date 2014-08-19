@@ -2,6 +2,7 @@ require 'active_record'
 require './lib/employee'
 require './lib/division'
 require './lib/project'
+require './lib/contribution'
 require 'pry'
 
 database_configuration = YAML::load(File.open('./db/config.yml'))
@@ -63,17 +64,20 @@ def add_division
 end
 
 def list_divisions
-  puts "\n\nHere are all your divisions:"
+  puts "\nHere are all your divisions:"
   divisions = Division.all
   divisions.each { |division| puts "#{division.id}. #{division.name}" }
-  puts "\n\n"
+  puts "\n"
   puts "Press '1' to list employees by division"
-  puts "Press '2' to add an employee to a division"
+  puts "Press '2' to list all division projects"
+  puts "Press '3' to add an employee to a division"
   user_choice = gets.chomp
 
   if user_choice == '1'
     list_employees_by_division
   elsif user_choice == '2'
+    list_division_projects
+  elsif user_choice == '3'
     add_employee
   else
     puts "Sorry, that wasn't a valid option.\n"
@@ -173,8 +177,11 @@ def add_project
   selected_employee = Employee.find(project_assignment)
   project = Project.new({:name => project_name})
   project.save
-  selected_employee.projects << project
-  puts "'#{project.name}' has been added."
+  puts "Please enter the contribution for this employee:\n"
+  user_contribution = gets.chomp
+  new_contribution = Contribution.new({:employee_id => selected_employee.id, :project_id => project.id, :contribution => user_contribution})
+  new_contribution.save
+  puts "\n'#{project.name}' has been added.\n"
 end
 
 def list_projects
@@ -234,6 +241,19 @@ def add_employee_to_project
   selected_project.employees << selected_employee
   puts "\nEmployee #{selected_employee.name} has been added to #{selected_project.name}\n"
   project_menu
+end
+
+def list_division_projects
+  puts "Enter the division number for which you'd like to see projects:"
+  user_choice = gets.chomp
+  selected_division = Division.find(user_choice)
+  division_projects = Division.find(user_choice).projects
+  division_projects.each do |project|
+    puts "*** Projects for #{selected_division.name} ***"
+    puts "#{project.name}"
+  end
+  puts "\n"
+  divisions_menu
 end
 
 welcome
